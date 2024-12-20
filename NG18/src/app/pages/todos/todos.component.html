@@ -1,38 +1,56 @@
-<div class="flex justify-around mt-14 mx-3">
-    <h1 class="text-3xl font-bold">Todos List</h1>
-    <button class="btn btn-netural justify-end">Add</button>
+<div
+  class="hero"
+  style="background-image: url(https://img.daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.webp);">
+  <div class="hero-overlay bg-opacity-50"></div>
+  <div class="hero-content text-neutral-content text-center">
+    <div class="max-w-md">
+      <h1 class="mb-5 text-5xl font-bold">Hello there</h1>
+      <p class="mb-5">
+        Get started with me !!
+      </p>
+      <button (click)="toggleForm()" class="btn btn-primary">{{ changtoggobtn() }}</button>
+    </div>
+  </div>
 </div>
+
+
 
 <div class="flex flex-col gap-6 items-center mt-10">
-  <input
+  @if (showForm) {
+    <input
+    [(ngModel)]="myTodo"
     type="text"
-    placeholder="email"
+    [placeholder]="defaultTodo"
     class="input input-bordered input-primary w-full max-w-xs"
-  />
+    />
+    @if (editable) {
+      <button (click)="updateTodos()"  class="btn btn-wide btn-warning">Update</button>
+    }
+    @else {<button (click)="addTodos()" class="btn btn-wide btn-primary">Create</button>}
 
-  <button class="btn btn-wide btn-primary">Send</button>
+  }
+  @else {
+    <p>CLick the show button above</p>
+  }
 
-  <ul class="menu bg-base-200 rounded-box w-80">
-    <li>
-        <span>Question 1</span>
-        <div class="justify-end">
-            <button class="btn btn-warning btn-sm">True</button>
-            <button class="btn btn-error btn-sm">False</button>
-        </div>
-    </li>
-    <li>
-        <span>Question 2</span>
-        <div class="justify-end">
-            <button class="btn btn-warning btn-sm">True</button>
-            <button class="btn btn-error btn-sm">False</button>
-        </div>
-    </li>
-    <li>
-        <span>Question 3</span>
-        <div class="justify-end">
-            <button class="btn btn-warning btn-sm">True</button>
-            <button class="btn btn-error btn-sm">False</button>
-        </div>
-    </li>
-  </ul>
+
+    <ul class="menu bg-base-200 rounded-box w-80">
+        @for (todos of todos; track i; let i = $index ) {
+            <li>
+                <span>{{i}} - {{todos}}</span>
+                <div class="justify-end">
+                    <button (click)="editTodo(todos, i)" class="btn btn-warning btn-sm">True</button>
+                    <button (click)="deleteTodo(i)" class="btn btn-error btn-sm">False</button>
+                </div>
+            </li>
+        }
+        @empty {
+            <li> Not todos yet !</li>
+        }
+    
+      </ul>
+
+
+
 </div>
+
