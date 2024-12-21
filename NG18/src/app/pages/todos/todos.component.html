@@ -1,3 +1,11 @@
+@if(notify){
+  <div class="toast" [ngClass]="['toast-bottom', notification.position]">
+    <div class="alert" [ngClass]="[notification.alertClass]">
+      <span>{{ notification.message }}</span>
+    </div>
+  </div>
+}
+
 <div
   class="hero"
   style="background-image: url(https://img.daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.webp);">
@@ -8,7 +16,12 @@
       <p class="mb-5">
         Get started with me !!
       </p>
-      <button (click)="toggleForm()" class="btn btn-primary">{{ changtoggobtn() }}</button>
+      <button (click)="toggleForm()" [ngClass]="{
+        'btn-primary': showForm,
+        'btn-neutral' : !showForm,
+        'btn-warning': editable,
+      }" class="btn">{{ changtoggobtn() }}</button>
+      
     </div>
   </div>
 </div>
@@ -18,29 +31,34 @@
 <div class="flex flex-col gap-6 items-center mt-10">
   @if (showForm) {
     <input
+    (keyup.enter)="submit()"
     [(ngModel)]="myTodo"
     type="text"
     [placeholder]="defaultTodo"
     class="input input-bordered input-primary w-full max-w-xs"
     />
     @if (editable) {
-      <button (click)="updateTodos()"  class="btn btn-wide btn-warning">Update</button>
+      <div class="flex gap-4">
+        <button (click)="submit()"  class="btn w-56 btn-warning">Update</button>
+        <button (click)="cancel()" class="btn btn-neutral">Cancel</button>
+      </div>
     }
-    @else {<button (click)="addTodos()" class="btn btn-wide btn-primary">Create</button>}
+    @else {<button (click)="submit()" class="btn btn-wide btn-primary">Create</button>}
 
   }
   @else {
     <p>CLick the show button above</p>
   }
 
-
     <ul class="menu bg-base-200 rounded-box w-80">
         @for (todos of todos; track i; let i = $index ) {
             <li>
-                <span>{{i}} - {{todos}}</span>
+                <span (dblclick)="deleteTodo (i)">{{todos}}</span>
                 <div class="justify-end">
-                    <button (click)="editTodo(todos, i)" class="btn btn-warning btn-sm">True</button>
-                    <button (click)="deleteTodo(i)" class="btn btn-error btn-sm">False</button>
+                    <button (click)="editTodo(todos, i)" class="btn btn-warning btn-sm">Edit</button>
+                    @if(!editable){
+                      <button (click)="deleteTodo(i)" class="btn btn-error btn-sm">Delete</button>
+                    }
                 </div>
             </li>
         }
@@ -49,8 +67,5 @@
         }
     
       </ul>
-
-
-
 </div>
 
